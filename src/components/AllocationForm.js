@@ -1,14 +1,16 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
+import Currency from './Currency';
 
 const AllocationForm = (props) => {
-    const { dispatch,remaining  } = useContext(AppContext);
+    const { dispatch,remaining,currency  } = useContext(AppContext);
 
     const [name, setName] = useState('');
-    const [cost, setCost] = useState('');
+    const [cost, setCost] = useState(0);
     const [action, setAction] = useState('');
 
     const submitEvent = () => {
+
             if(name==="" || name==="Choose...")
             {
                 alert("Please Choose a valid Department");
@@ -16,7 +18,7 @@ const AllocationForm = (props) => {
             }
             if(cost > remaining) {
                 alert("The value cannot exceed remaining funds  £"+remaining);
-                setCost("");
+                setCost(0);
                 return;
             }
 
@@ -31,6 +33,11 @@ const AllocationForm = (props) => {
             });
             console.log(expense);
         } else {
+            if(cost>remaining)
+                {
+                   alert("Your Allocation exceeds available funds");
+                     return;
+                }
                 dispatch({
                     type: 'ADD_EXPENSE',
                     payload: expense,
@@ -52,7 +59,7 @@ const AllocationForm = (props) => {
                <option value="Marketing" name="Marketing"> Marketing</option>
                 <option value="Sales" name="Sales">Sales</option>
                 <option value="Finance" name="Finance">Finance</option>
-                <option value="Humon Resource" name="Humon Resource">Humon Resource</option>
+                <option value="Human Resource" name="Human Resource">Human Resource</option>
                 <option value="IT" name="IT">IT</option>
                 <option value="Admin" name="Admin">Admin</option>
                   </select>
@@ -64,16 +71,15 @@ const AllocationForm = (props) => {
                         <option defaultValue value="Add" name="Add">Add</option>
                 <option value="Reduce" name="Reduce">Reduce</option>
                   </select>
-
+                    <span style={{textAlign: "center", marginLeft: "1em"}} className="input-group-prepend" >{currency}</span>
                     <input
                         required='required'
                         type='number'
                         id='cost'
                         value={cost}
                         style={{ marginLeft: '2rem' , size: 10}}
-                        onChange={(event) => setCost(event.target.value)}>
+                    onChange={(event) => setCost(event.target.value)}>
                         </input>
-
                     <button className="btn btn-primary" onClick={submitEvent} style={{ marginLeft: '2rem' }}>
                         Save
                     </button>

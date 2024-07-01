@@ -46,28 +46,32 @@ export const AppReducer = (state, action) => {
                 const red_expenses = state.expenses.map((currentExp)=> {
                     if (currentExp.name === action.payload.name && currentExp.cost - action.payload.cost >= 0) {
                         currentExp.cost =  currentExp.cost - action.payload.cost;
-                        budget = state.budget + action.payload.cost
+                        // budget = state.budget + action.payload.cost
                     }
-                    return currentExp
+                    return currentExp;
                 })
                 action.type = "DONE";
                 return {
                     ...state,
                     expenses: [...red_expenses],
                 };
+
             case 'DELETE_EXPENSE':
-            action.type = "DONE";
-            state.expenses.map((currentExp)=> {
-                if (currentExp.name === action.payload) {
-                    budget = state.budget + currentExp.cost
-                    currentExp.cost =  0;
-                }
-                return currentExp
+            
+            const newExp = [] ;
+             state.expenses.forEach((currentExp)=> {
+                if (currentExp.name !== action.payload.name) {
+                    //  state.budget + currentExp.cost;
+                    newExp.push(currentExp);
+                } 
+                 
             })
             action.type = "DONE";
             return {
                 ...state,
-                budget
+                budget,
+                expenses: newExp,
+                
             };
         case 'SET_BUDGET':
             action.type = "DONE";
@@ -78,7 +82,7 @@ export const AppReducer = (state, action) => {
             };
         case 'CHG_CURRENCY':
             action.type = "DONE";
-            state.currency = action.payload;
+            state.currency = action.currency;
             return {
                 ...state
             }

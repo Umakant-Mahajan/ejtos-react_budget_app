@@ -2,26 +2,44 @@ import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 
 const Budget = () => {
-    const { budget, dispatch } = useContext(AppContext);
-    const [newBudget, setNewBudget] = useState(budget);
+    const { budget, dispatch,remaining,currency } = useContext(AppContext);
+    const [currBudget, setNewBudget] = useState(budget);
+
     const handleBudgetChange = (event) => {
+        if(event.target.value>20000)
+            {
+                alert("Your Budget cant Exceed 20000");
+                return;
+            }
+        if(event.target.value<budget-remaining)
+           {
+            alert("Your Budget cant be lower than Spendings : "+ (remaining));
+            return;
+           }
+
         setNewBudget(event.target.value);
+      const act = {
+            type: "SET_BUDGET",
+            budget: currBudget
+        }
+ 
+        dispatch(act);
+        
     }
 
-    const updateBudget=()=>{
-       const act = {
-           type: "SET_BUDGET",
-           budget: newBudget
-       }
+    // const updateBudget=()=>{
+    //    const act = {
+    //        type: "SET_BUDGET",
+    //        budget: currBudget
+    //    }
 
-       dispatch(act);
-    }
+    //    dispatch(act);
+    // }
 
     return (
 <div className='alert alert-secondary'>
-<span>Budget: £{budget}</span>
-<input type="number" step="10" value={newBudget} onChange={handleBudgetChange}></input>
-<button style={{margin: "0 0 1em 0"}} onClick={updateBudget}>Update</button>
+<span>Budget: {currency + currBudget}</span>
+<input type="number" step="10" value={currBudget} onChange={handleBudgetChange}></input>
 </div>
     );
 };
